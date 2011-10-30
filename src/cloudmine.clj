@@ -35,7 +35,7 @@
                "https://api.cloudmine.me/v1/app/"
                cm-app-id
                "/text?keys="
-               (keys-string keys))
+               (keys-string (map name keys)))
               {:headers {"X-Cloudmine-ApiKey" cm-api-key}
                :content-type :application/json
                :accepts :application/json}))
