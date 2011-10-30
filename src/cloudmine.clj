@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get])
   (:use [clojure.data.json :only (json-str write-json read-json)])
   (:require [clojure.core :as core]
-            [clj-http.client :only (post)  :as client]
+            [clj-http.client :as client]
             [clojure.data.codec.base64 :as b64]))
 
 (def cloudmine-api-url "https://api.cloudmine.me/v1/app/")
