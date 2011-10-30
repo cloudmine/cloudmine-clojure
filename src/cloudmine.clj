@@ -25,62 +25,41 @@
         (.getBytes s))))
 
 (defn- build-cm-request
-  ([api-auth action]
-      {:params {:headers {"X-Cloudmine-ApiKey" (:cm-api-key api-auth)}
-                :content-type :application/json}
-       :url (str cloudmine-api-url (:cm-app-id api-auth) "/" action)})
-  ([api-auth user-auth action]
-      {:params {:headers {"X-Cloudmine-ApiKey" (:cm-api-key api-auth)
-                          "Authorization" (base-64-str
-                                           (str (:email user-auth)
-                                                ":"
-                                                (:password user-auth)))}
-                :content-type :application/json}
-       :url (str cloudmine-api-url (:cm-app-id api-auth) "/user/" action)}))
-
-(defn- put-internal
-  [url params data]
-  (response-body
-   (client/put url
-               (conj params
-                     {:body (json-str data)}))))
+  [auth action]
+  (if (and (contains? auth :email) (contains? auth :password))
+    {:params {:headers {"X-Cloudmine-ApiKey" (:cm-api-key auth)
+                        "Authorization" (base-64-str
+                                         (str (:email auth)
+                                              ":"
+                                              (:password auth)))}
+                        :content-type :application/json}
+     :url (str cloudmine-api-url (:cm-app-id auth) "/user/" action)}
+    {:params {:headers {"X-Cloudmine-ApiKey" (:cm-api-key auth)}
+              :content-type :application/json}
+     :url (str cloudmine-api-url (:cm-app-id auth) "/" action)}))
 
 (defn put
   "Adds data to cloudmine. Pass in credentials as a map, and
    uses data-key as the key to put the data. data-key should
    be a clojure keyword, data should be a native clojure data
    structure."
-  ([auth data]
-      (let [{:keys [url params]} (build-cm-request auth "text")]
-        (put-internal url params data)))
-  ([auth user-auth data]
-      (let [{:keys [url params]} (build-cm-request auth user-auth)]
-        (put-internal url params data))))
-
-(defn- get-internal
-  [url params keys]
-  (response-body (client/get (str url "?keys="
-                                  (keys-string (map name keys)))
-                             params)))
+  [auth data]
+  (let [{:keys [url params]} (build-cm-request auth "text")]
+    (response-body (client/put url
+                               (conj params
+                                     {:body (json-str data)})))))
 
 (defn get
   "Queries cloudmine by keys"
-  ([auth keys]
-      (let [{:keys [url params]} (build-cm-request auth "text")]
-        (get-internal url params keys)))
-  ([auth user-auth keys]
-      (let [{:keys [url params]} (build-cm-request auth user-auth "text")]
-        (get-internal url params keys))))
+  [auth & keys]
+  (let [{:keys [url params]} (build-cm-request auth "text")]
+    (response-body (client/get (str url "?keys="
+                                (keys-string (map name keys)))
+                               params))))
 
-(defn- query-internal
-  [url params query]
-    (response-body (client/get (str url "?q=" query)
-                               params)))
 (defn query
   "Queries cloudmine using search query language"
-  ([auth query]
-      (let [{:keys [url params]} (build-cm-request auth "search")]
-        (query-internal url params query)))
-  ([auth user-auth query]
-      (let [{:keys [url params]} (build-cm-request auth user-auth "search")]
-        (query-internal url params query))))
+  [auth query]
+  (let [{:keys [url params]} (build-cm-request auth "search")]
+    (response-body (client/get (str url "?q=" query)
+                               params))))
