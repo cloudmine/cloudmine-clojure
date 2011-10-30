@@ -11,7 +11,7 @@ The Cloudmine credentials live in a simple map.
 Pass these to the other functions to do things with cloudmine.
 
      (cloudmine/put cm-creds {:key {:data 3 :val 6}})
-     (cloudmine/get cm-creds :key)
+     (cloudmine/get cm-creds [:key])
      (cloudmine/query cm-creds "[val=6]")
 
 If you want user-level credentials, make another map for those and pass it as the second parameter:
@@ -19,5 +19,5 @@ If you want user-level credentials, make another map for those and pass it as th
      (def user-cm-creds {:email <user email> :password <user password>})
 
      (cloudmine/put cm-creds user-cm-creds {:key {:data 3 :val 6}})
-     (cloudmine/get cm-creds user-cm-creds :key)
+     (cloudmine/get cm-creds user-cm-creds [:key])
      (cloudmine/query cm-creds user-cm-creds "[val=6]")
