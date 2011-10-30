@@ -14,7 +14,7 @@ Pass these to the other functions to do things with cloudmine.
      (cloudmine/get cm-creds :key)
      (cloudmine/query cm-creds "[val=6]")
 
-If you want user-level credentials, make another map you're using:
+If you want user-level credentials, make another map for those and pass it as the second parameter:
 
      (def user-cm-creds {:email <user email> :password <user password>})
 
