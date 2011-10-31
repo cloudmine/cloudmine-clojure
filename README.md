@@ -19,3 +19,12 @@ Pass these to the other functions to do things with cloudmine.
      (cloudmine/get cm-creds :key)
      (cloudmine/query cm-creds "[val=6]")
 
+Cloudmine API functions supported:
+
+     (cloudmine/get <creds> <:key>..)
+     (cloudmine/put <creds> <data>)
+     (cloudmine/get-binary <creds> <:key>)
+     (cloudmine/put-binary <creds> <data)
+     (cloudmine/user <creds>)
+     (cloudmine/delete <creds> <:key>..)
+     (cloudmine/query <creds> <query)
