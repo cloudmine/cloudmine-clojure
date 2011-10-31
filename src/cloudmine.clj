@@ -32,7 +32,7 @@
                                          (str (:email auth)
                                               ":"
                                               (:password auth)))}
-                        :content-type :application/json}
+              :content-type :application/json}
      :url (str cloudmine-api-url (:cm-app-id auth) "/user/" action)}
     {:params {:headers {"X-Cloudmine-ApiKey" (:cm-api-key auth)}
               :content-type :application/json}
@@ -56,6 +56,16 @@
     (response-body (client/get (str url "?keys="
                                 (keys-string (map name keys)))
                                params))))
+
+(defn user
+  [auth]
+  (let [{:keys [url params]} (build-cm-request auth "account")]
+    (client/post url params)))
+
+(defn delete
+  [auth & keys]
+  (let [{:keys [url params]} (build-cm-request auth "data")]
+    (client/delete url params)))
 
 (defn query
   "Queries cloudmine using search query language"
