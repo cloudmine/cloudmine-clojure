@@ -73,3 +73,15 @@
   (let [{:keys [url params]} (build-cm-request auth "search")]
     (response-body (client/get (str url "?q=" query)
                                params))))
+
+(defn get-binary
+  [auth key]
+  (let [{:keys [url params]} (build-cm-request auth "binary")]
+    (client/get (str url "/" key) params)))
+
+(defn put-binary
+  [auth data]
+  (let [{:keys [url params]} (build-cm-request auth "binary")]
+    (response-body (client/put url
+                               (conj params
+                                     {:body data})))))
